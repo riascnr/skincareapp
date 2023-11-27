@@ -18,6 +18,11 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              CircleAvatar(
+                radius: 30, // Adjust the radius to make the logo smaller
+                backgroundImage: AssetImage('assets/logo2.png'), // Replace with your logo image
+              ),
+              SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -77,4 +82,10 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: LoginScreen(),
+  ));
 }

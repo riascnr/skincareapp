@@ -1,68 +1,112 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
+class SkincareProduct {
+  final String name;
+  final String description;
+  final IconData icon;
+
+  SkincareProduct({required this.name, required this.description, required this.icon});
+}
+
+class DashboardScreen extends StatefulWidget {
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  List<String> selectedSkinTypes = ['Normal']; // Default skin type
+  List<SkincareProduct> recommendedProducts = [
+    SkincareProduct(
+      name: 'Cleanser',
+      description: 'Gentle foaming cleanser for all skin types.',
+      icon: Icons.face,
+    ),
+    SkincareProduct(
+      name: 'Moisturizer',
+      description: 'Hydrating moisturizer with SPF 30.',
+      icon: Icons.opacity,
+    ),
+    // Add more product recommendations as needed
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Skincare Recommendations'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Skincare App',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Profile'),
+              onTap: () {
+                // Add profile navigation logic
+                Navigator.pop(context);
+              },
+            ),
+            // Add more sidebar items as needed
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Welcome to SkinBetter!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text('Select Skin Types:', style: TextStyle(fontSize: 18)),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: ['Normal', 'Oily', 'Dry', 'Combination', 'Sensitive'].length,
+              itemBuilder: (context, index) {
+                final skinType = ['Normal', 'Oily', 'Dry', 'Combination', 'Sensitive'][index];
+                return CheckboxListTile(
+                  title: Text(skinType),
+                  value: selectedSkinTypes.contains(skinType),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null) {
+                        if (value) {
+                          selectedSkinTypes.add(skinType);
+                        } else {
+                          selectedSkinTypes.remove(skinType);
+                        }
+                      }
+                    });
+                  },
+                );
+              },
             ),
             SizedBox(height: 20),
-            Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your Skin Profile',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Expanded(
+              child: ListView.builder(
+                itemCount: recommendedProducts.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 4,
+                    child: ListTile(
+                      title: Text(recommendedProducts[index].name),
+                      subtitle: Text(recommendedProducts[index].description),
+                      leading: Icon(recommendedProducts[index].icon),
                     ),
-                    SizedBox(height: 10),
-                    // Add widgets displaying user's skin profile information
-                    Text('Skin Type: Normal'),
-                    Text('Concerns: Dry Skin, Acne'),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Recommended Products',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    // Add widgets displaying recommended skincare products
-                    ListTile(
-                      title: Text('Cleanser'),
-                      subtitle: Text('Gentle foaming cleanser for all skin types.'),
-                      leading: Icon(Icons.face),
-                    ),
-                    ListTile(
-                      title: Text('Moisturizer'),
-                      subtitle: Text('Hydrating moisturizer with SPF 30.'),
-                      leading: Icon(Icons.opacity),
-                    ),
-                    // Add more product recommendations as needed
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
